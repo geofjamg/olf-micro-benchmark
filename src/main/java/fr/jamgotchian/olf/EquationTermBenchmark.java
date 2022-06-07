@@ -13,15 +13,19 @@ public class EquationTermBenchmark {
 
     @Benchmark
     public void objectModelSortedByBranch(EquationTermState state) {
-        for (var term : state.getTerms()) {
-            term.eval();
+        var terms = state.getTerms();
+        double[] values = new double[terms.size()];
+        for (int i = 0; i < terms.size(); i++) {
+            values[i] = terms.get(i).eval();
         }
     }
 
     @Benchmark
     public void objectModelShuffled(EquationTermState state) {
-        for (var term : state.getShuffledTerms()) {
-            term.eval();
+        var terms = state.getShuffledTerms();
+        double[] values = new double[terms.size()];
+        for (int i = 0; i < terms.size(); i++) {
+            values[i] = terms.get(i).eval();
         }
     }
 
@@ -39,15 +43,22 @@ public class EquationTermBenchmark {
         double[] a1 = state.getA1();
         double[] v = state.getV();
         double[] ph = state.getPh();
-        for (int num = 0; num < state.getBranchCount(); num++) {
+        int branchCount = state.getBranchCount();
+        double[] p1 = new double[branchCount];
+        double[] q1 = new double[branchCount];
+        double[] i1 = new double[branchCount];
+        double[] p2 = new double[branchCount];
+        double[] q2 = new double[branchCount];
+        double[] i2 = new double[branchCount];
+        for (int num = 0; num < branchCount; num++) {
             int bus1Num = branchBus1Num[num];
             int bus2Num = branchBus2Num[num];
-            ClosedBranchSide1ActiveFlowEquationTerm.p1(y[num], ksi[num], g1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
-            ClosedBranchSide1ReactiveFlowEquationTerm.q1(y[num], ksi[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
-            ClosedBranchSide1CurrentMagnitudeEquationTerm.i1(y[num], ksi[num], g1[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
-            ClosedBranchSide2ActiveFlowEquationTerm.p2(y[num], ksi[num], g2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
-            ClosedBranchSide2ReactiveFlowEquationTerm.q2(y[num], ksi[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
-            ClosedBranchSide2CurrentMagnitudeEquationTerm.i2(y[num], ksi[num], g2[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            p1[num] = ClosedBranchSide1ActiveFlowEquationTerm.p1(y[num], ksi[num], g1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            q1[num] = ClosedBranchSide1ReactiveFlowEquationTerm.q1(y[num], ksi[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            i1[num] = ClosedBranchSide1CurrentMagnitudeEquationTerm.i1(y[num], ksi[num], g1[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            p2[num] = ClosedBranchSide2ActiveFlowEquationTerm.p2(y[num], ksi[num], g2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            q2[num] = ClosedBranchSide2ReactiveFlowEquationTerm.q2(y[num], ksi[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            i2[num] = ClosedBranchSide2CurrentMagnitudeEquationTerm.i2(y[num], ksi[num], g2[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
         }
     }
 
@@ -66,35 +77,41 @@ public class EquationTermBenchmark {
         double[] v = state.getV();
         double[] ph = state.getPh();
         int branchCount = state.getBranchCount();
+        double[] p1 = new double[branchCount];
+        double[] q1 = new double[branchCount];
+        double[] i1 = new double[branchCount];
+        double[] p2 = new double[branchCount];
+        double[] q2 = new double[branchCount];
+        double[] i2 = new double[branchCount];
         for (int num = 0; num < branchCount; num++) {
             int bus1Num = branchBus1Num[num];
             int bus2Num = branchBus2Num[num];
-            ClosedBranchSide1ActiveFlowEquationTerm.p1(y[num], ksi[num], g1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            p1[num] = ClosedBranchSide1ActiveFlowEquationTerm.p1(y[num], ksi[num], g1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
         }
         for (int num = 0; num < branchCount; num++) {
             int bus1Num = branchBus1Num[num];
             int bus2Num = branchBus2Num[num];
-            ClosedBranchSide1ReactiveFlowEquationTerm.q1(y[num], ksi[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            q1[num] = ClosedBranchSide1ReactiveFlowEquationTerm.q1(y[num], ksi[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
         }
         for (int num = 0; num < branchCount; num++) {
             int bus1Num = branchBus1Num[num];
             int bus2Num = branchBus2Num[num];
-            ClosedBranchSide1CurrentMagnitudeEquationTerm.i1(y[num], ksi[num], g1[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            i1[num] = ClosedBranchSide1CurrentMagnitudeEquationTerm.i1(y[num], ksi[num], g1[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
         }
         for (int num = 0; num < branchCount; num++) {
             int bus1Num = branchBus1Num[num];
             int bus2Num = branchBus2Num[num];
-            ClosedBranchSide2ActiveFlowEquationTerm.p2(y[num], ksi[num], g2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            p2[num] = ClosedBranchSide2ActiveFlowEquationTerm.p2(y[num], ksi[num], g2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
         }
         for (int num = 0; num < branchCount; num++) {
             int bus1Num = branchBus1Num[num];
             int bus2Num = branchBus2Num[num];
-            ClosedBranchSide2ReactiveFlowEquationTerm.q2(y[num], ksi[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            q2[num] = ClosedBranchSide2ReactiveFlowEquationTerm.q2(y[num], ksi[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
         }
         for (int num = 0; num < branchCount; num++) {
             int bus1Num = branchBus1Num[num];
             int bus2Num = branchBus2Num[num];
-            ClosedBranchSide2CurrentMagnitudeEquationTerm.i2(y[num], ksi[num], g2[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            i2[num] = ClosedBranchSide2CurrentMagnitudeEquationTerm.i2(y[num], ksi[num], g2[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
         }
     }
 
@@ -112,15 +129,22 @@ public class EquationTermBenchmark {
         double[] a1 = state.getA1();
         double[] v = state.getV();
         double[] ph = state.getPh();
-        for (int num = 0; num < state.getBranchCount(); num++) {
+        int branchCount = state.getBranchCount();
+        double[] p1 = new double[branchCount];
+        double[] q1 = new double[branchCount];
+        double[] i1 = new double[branchCount];
+        double[] p2 = new double[branchCount];
+        double[] q2 = new double[branchCount];
+        double[] i2 = new double[branchCount];
+        for (int num = 0; num < branchCount; num++) {
             int bus1Num = branchBus1Num[num];
             int bus2Num = branchBus2Num[num];
-            double p1 = ClosedBranchSide1ActiveFlowEquationTerm.p1(y[num], ksi[num], g1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
-            double q1 = ClosedBranchSide1ReactiveFlowEquationTerm.q1(y[num], ksi[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
-            double p2 = ClosedBranchSide2ActiveFlowEquationTerm.p2(y[num], ksi[num], g2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
-            double q2 = ClosedBranchSide2ReactiveFlowEquationTerm.q2(y[num], ksi[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
-            double i1 = FastMath.hypot(p1, q1) / (v[bus1Num] * FastMath.sqrt(3) / 1000);
-            double i2 = FastMath.hypot(p2, q2) / (v[bus2Num] * FastMath.sqrt(3) / 1000);
+            p1[num] = ClosedBranchSide1ActiveFlowEquationTerm.p1(y[num], ksi[num], g1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            q1[num] = ClosedBranchSide1ReactiveFlowEquationTerm.q1(y[num], ksi[num], b1[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            p2[num] = ClosedBranchSide2ActiveFlowEquationTerm.p2(y[num], ksi[num], g2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            q2[num] = ClosedBranchSide2ReactiveFlowEquationTerm.q2(y[num], ksi[num], b2[num], v[bus1Num], ph[bus1Num], r1[num], a1[num], v[bus2Num], ph[bus2Num]);
+            i1[num] = FastMath.hypot(p1[num], q1[num]) / (v[bus1Num] * FastMath.sqrt(3) / 1000);
+            i2[num] = FastMath.hypot(p2[num], q2[num]) / (v[bus2Num] * FastMath.sqrt(3) / 1000);
         }
     }
 }
