@@ -8,6 +8,7 @@ import com.powsybl.openloadflow.equations.VariableSet;
 import com.powsybl.openloadflow.network.LfBranch;
 import com.powsybl.openloadflow.network.LfBus;
 import com.powsybl.openloadflow.network.PiModel;
+import net.jafama.FastMath;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -69,6 +70,8 @@ public class EquationTermState {
     private final double[] x = new double[branchCount];
     private final double[] y = new double[branchCount];
     private final double[] ksi = new double[branchCount];
+    private final double[] cosKsi = new double[branchCount];
+    private final double[] sinKsi = new double[branchCount];
     private final double[] g1 = new double[branchCount];
     private final double[] g2 = new double[branchCount];
     private final double[] b1 = new double[branchCount];
@@ -93,6 +96,10 @@ public class EquationTermState {
         generate(ph, PH_1);
         generate(r1, R_1);
         generate(a1, A_1);
+        for (int i = 0; i < ksi.length; i++) {
+            cosKsi[i] = FastMath.cos(ksi[i]);
+            sinKsi[i] = FastMath.signFromBit(ksi[i]);
+        }
 
         VariableSet<AcVariableType> variableSet = new VariableSet<>();
 
@@ -209,6 +216,14 @@ public class EquationTermState {
 
     public double[] getKsi() {
         return ksi;
+    }
+
+    public double[] getCosKsi() {
+        return cosKsi;
+    }
+
+    public double[] getSinKsi() {
+        return sinKsi;
     }
 
     public double[] getG1() {
