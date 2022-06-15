@@ -2,6 +2,7 @@ package fr.jamgotchian.olf;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.openloadflow.ac.equations.*;
+import com.powsybl.openloadflow.equations.Equation;
 import com.powsybl.openloadflow.equations.EquationTerm;
 import com.powsybl.openloadflow.equations.StateVector;
 import com.powsybl.openloadflow.equations.VariableSet;
@@ -17,10 +18,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @State(Scope.Thread)
 public class EquationTermState {
@@ -81,6 +79,10 @@ public class EquationTermState {
 
     private final double[] v = new double[busCount];
     private final double[] ph = new double[busCount];
+
+    private final List<List<EquationTerm<AcVariableType, AcEquationType>>> busP = new ArrayList<>(busCount);
+    private final List<List<EquationTerm<AcVariableType, AcEquationType>>> busQ = new ArrayList<>(busCount);
+    private final List<List<EquationTerm<AcVariableType, AcEquationType>>> busI = new ArrayList<>(busCount);
 
     @Setup(Level.Trial)
     public void doSetup() {
@@ -164,13 +166,30 @@ public class EquationTermState {
 
         var sv = new StateVector(values);
 
+        for (int i = 0; i < busCount; i++) {
+            busP.add(new ArrayList<>());
+            busQ.add(new ArrayList<>());
+            busI.add(new ArrayList<>());
+        }
         for (LfBranch branch : branches) {
-            terms.add(new ClosedBranchSide1ActiveFlowEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true));
-            terms.add(new ClosedBranchSide1ReactiveFlowEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true));
-            terms.add(new ClosedBranchSide1CurrentMagnitudeEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true));
-            terms.add(new ClosedBranchSide2ActiveFlowEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true));
-            terms.add(new ClosedBranchSide2ReactiveFlowEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true));
-            terms.add(new ClosedBranchSide2CurrentMagnitudeEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true));
+            var p1 = new ClosedBranchSide1ActiveFlowEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true);
+            terms.add(p1);
+            var q1 = new ClosedBranchSide1ReactiveFlowEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true);
+            terms.add(q1);
+            var i1 = new ClosedBranchSide1CurrentMagnitudeEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true);
+            terms.add(i1);
+            var p2 = new ClosedBranchSide2ActiveFlowEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true);
+            terms.add(p2);
+            var q2 = new ClosedBranchSide2ReactiveFlowEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true);
+            terms.add(q2);
+            var i2 = new ClosedBranchSide2CurrentMagnitudeEquationTerm(branch, branch.getBus1(), branch.getBus2(), variableSet, true, true);
+            terms.add(i2);
+            busP.get(branch.getBus1().getNum()).add(p1);
+            busP.get(branch.getBus2().getNum()).add(p2);
+            busQ.get(branch.getBus1().getNum()).add(q1);
+            busQ.get(branch.getBus2().getNum()).add(q2);
+            busI.get(branch.getBus1().getNum()).add(i1);
+            busI.get(branch.getBus2().getNum()).add(i2);
         }
         for (var term : terms) {
             term.setStateVector(sv);
@@ -256,5 +275,17 @@ public class EquationTermState {
 
     public double[] getPh() {
         return ph;
+    }
+
+    public List<List<EquationTerm<AcVariableType, AcEquationType>>> getBusP() {
+        return busP;
+    }
+
+    public List<List<EquationTerm<AcVariableType, AcEquationType>>> getBusQ() {
+        return busQ;
+    }
+
+    public List<List<EquationTerm<AcVariableType, AcEquationType>>> getBusI() {
+        return busI;
     }
 }
