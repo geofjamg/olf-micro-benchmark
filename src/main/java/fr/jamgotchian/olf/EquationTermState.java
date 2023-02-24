@@ -120,6 +120,7 @@ public class EquationTermState {
             var branch = Mockito.mock(LfBranch.class, ANSWER);
             branches.add(branch);
             Mockito.doReturn(i).when(branch).getNum();
+            Mockito.doReturn(false).when(branch).isDisabled();
             PiModel piModel = Mockito.mock(PiModel.class, ANSWER);
             Mockito.doReturn(piModel).when(branch).getPiModel();
             Mockito.doReturn(r[i]).when(piModel).getR();
