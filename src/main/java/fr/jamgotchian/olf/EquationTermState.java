@@ -2,7 +2,6 @@ package fr.jamgotchian.olf;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.openloadflow.ac.equations.*;
-import com.powsybl.openloadflow.equations.Equation;
 import com.powsybl.openloadflow.equations.EquationTerm;
 import com.powsybl.openloadflow.equations.StateVector;
 import com.powsybl.openloadflow.equations.VariableSet;
@@ -18,7 +17,10 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 @State(Scope.Thread)
 public class EquationTermState {
