@@ -4,21 +4,35 @@ import com.powsybl.openloadflow.ac.equations.*;
 import com.powsybl.openloadflow.equations.StateVector;
 import net.jafama.FastMath;
 
+import java.util.Arrays;
+
 public class BusActivePowerTargetEquationArray implements EquationArray<AcVariableType, AcEquationType> {
 
     private final BranchArray branchArray;
     private final VariableArray variableArray;
     private final StateVector stateVector;
 
-    public BusActivePowerTargetEquationArray(BranchArray branchArray, VariableArray variableArray,
+    private final int[] active;
+
+    public BusActivePowerTargetEquationArray(int busCount, BranchArray branchArray, VariableArray variableArray,
                                              StateVector stateVector) {
         this.branchArray = branchArray;
         this.variableArray = variableArray;
         this.stateVector = stateVector;
+        active = new int[busCount];
+        Arrays.fill(active, 1);
     }
 
     public AcEquationType getType() {
         return AcEquationType.BUS_TARGET_P;
+    }
+
+    public boolean isActive(int num) {
+        return active[num] == 0;
+    }
+
+    public void setActive(int num, boolean active) {
+        this.active[num] = active ? 1 : 0;
     }
 
     void eval(double[] values) {
@@ -64,6 +78,10 @@ public class BusActivePowerTargetEquationArray implements EquationArray<AcVariab
                         sinTheta2);
                 values[branchArray.bus2Num[branchNum]] += p2;
             }
+        }
+
+        for (int busNum = 0; busNum < values.length; busNum++) {
+            values[busNum] *= active[busNum];
         }
     }
 }

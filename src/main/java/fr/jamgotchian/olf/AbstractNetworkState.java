@@ -58,7 +58,7 @@ public abstract class AbstractNetworkState {
 
         BranchArray branchArray = new BranchArray(lfNetwork.getBranches());
         VariableArray variableArray = new VariableArray(lfNetwork.getBuses().size(), equationSystem);
-        equationArray = new BusActivePowerTargetEquationArray(branchArray, variableArray, equationSystem.getStateVector());
+        equationArray = new BusActivePowerTargetEquationArray(lfNetwork.getBuses().size(), branchArray, variableArray, equationSystem.getStateVector());
     }
 
     protected abstract Network loadNetwork();
