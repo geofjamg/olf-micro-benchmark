@@ -57,8 +57,8 @@ public abstract class AbstractNetworkState {
         NewtonRaphson.initStateVector(lfNetwork, equationSystem, new PreviousValueVoltageInitializer());
 
         BranchArray branchArray = new BranchArray(lfNetwork.getBranches());
-        StateArray stateArray = new StateArray(lfNetwork.getBuses().size(), equationSystem);
-        equationArray = new BusActivePowerTargetEquationArray(branchArray, stateArray);
+        VariableArray variableArray = new VariableArray(lfNetwork.getBuses().size(), equationSystem);
+        equationArray = new BusActivePowerTargetEquationArray(branchArray, variableArray, equationSystem.getStateVector());
     }
 
     protected abstract Network loadNetwork();
