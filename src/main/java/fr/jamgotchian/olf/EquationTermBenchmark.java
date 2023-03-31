@@ -16,7 +16,7 @@ public class EquationTermBenchmark {
 
     private static final double SQRT_3 = FastMath.sqrt(3);
 
-    @Benchmark
+    //@Benchmark
     public void objectModelSortedByBranch(EquationTermState state) {
         var terms = state.getTerms();
         double[] values = new double[terms.size()];
@@ -25,7 +25,7 @@ public class EquationTermBenchmark {
         }
     }
 
-    @Benchmark
+    //@Benchmark
     public void objectModelSortedByBranchAndStoreResults(EquationTermState state) {
         double[] p = new double[state.getBusCount()];
         double[] q = new double[state.getBusCount()];
@@ -43,7 +43,7 @@ public class EquationTermBenchmark {
         }
     }
 
-    @Benchmark
+    //@Benchmark
     public void objectModelShuffled(EquationTermState state) {
         var terms = state.getShuffledTerms();
         double[] values = new double[terms.size()];
@@ -67,7 +67,7 @@ public class EquationTermBenchmark {
         }
     }
 
-    @Benchmark
+    //@Benchmark
     public void staticMethodSortedByBranch(EquationTermState state) {
         int[] branchBus1Num = state.getBranchBus1Num();
         int[] branchBus2Num = state.getBranchBus2Num();
@@ -107,7 +107,7 @@ public class EquationTermBenchmark {
         }
     }
 
-    @Benchmark
+    //@Benchmark
     public void staticMethodSortedByTermType(EquationTermState state) {
         int[] branchBus1Num = state.getBranchBus1Num();
         int[] branchBus2Num = state.getBranchBus2Num();
@@ -167,7 +167,7 @@ public class EquationTermBenchmark {
         }
     }
 
-    @Benchmark
+    //@Benchmark
     public void staticMethodSortedByBranchWithCurrentCalculatedFromActivePower(EquationTermState state) {
         int[] branchBus1Num = state.getBranchBus1Num();
         int[] branchBus2Num = state.getBranchBus2Num();
@@ -207,7 +207,7 @@ public class EquationTermBenchmark {
         }
     }
 
-    @Benchmark
+    //@Benchmark
     public void staticMethodSortedByBranchWithCurrentCalculatedFromActivePowerAndStoreResult(EquationTermState state) {
         int[] branchBus1Num = state.getBranchBus1Num();
         int[] branchBus2Num = state.getBranchBus2Num();
@@ -264,7 +264,7 @@ public class EquationTermBenchmark {
         return a1 - A2 + ph1 - ph2;
     }
 
-    @Benchmark
+    //@Benchmark
     public void staticMethodSortedByBranchWithCurrentCalculatedFromActivePowerAndStoreResultOnlyOneCosSin(EquationTermState state) {
         int[] branchBus1Num = state.getBranchBus1Num();
         int[] branchBus2Num = state.getBranchBus2Num();
