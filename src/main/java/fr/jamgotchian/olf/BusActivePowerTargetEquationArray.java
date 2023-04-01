@@ -23,19 +23,23 @@ public class BusActivePowerTargetEquationArray implements EquationArray<AcVariab
         Arrays.fill(active, 1);
     }
 
+    @Override
     public AcEquationType getType() {
         return AcEquationType.BUS_TARGET_P;
     }
 
+    @Override
     public boolean isActive(int num) {
         return active[num] == 0;
     }
 
+    @Override
     public void setActive(int num, boolean active) {
         this.active[num] = active ? 1 : 0;
     }
 
-    void eval(double[] values) {
+    @Override
+    public void eval(double[] values) {
         double[] state = stateVector.get();
         for (int branchNum = 0; branchNum < branchArray.getLength(); branchNum++) {
             if (branchArray.active[branchNum] == 1) {
