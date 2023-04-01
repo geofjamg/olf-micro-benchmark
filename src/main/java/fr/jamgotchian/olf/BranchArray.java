@@ -25,6 +25,8 @@ public class BranchArray {
     final double[] r1;
     final double[] a1;
 
+    final int[] active;
+
     public BranchArray(List<LfBranch> branches) {
         length = branches.size();
         bus1Num = new int[length];
@@ -39,6 +41,7 @@ public class BranchArray {
         b2 = new double[length];
         r1 = new double[length];
         a1 = new double[length];
+        active = new int[length];
         for (int i = 0; i < branches.size(); i++) {
             LfBranch branch = branches.get(i);
             LfBus bus1 = branch.getBus1();
@@ -59,6 +62,7 @@ public class BranchArray {
             g2[i] = piModel.getG2();
             r1[i] = piModel.getR1();
             a1[i] = piModel.getA1();
+            active[i] = 1;
         }
     }
 

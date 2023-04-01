@@ -1,10 +1,7 @@
 package fr.jamgotchian.olf;
 
 import com.powsybl.iidm.network.Network;
-import com.powsybl.openloadflow.ac.equations.AcEquationType;
-import com.powsybl.openloadflow.ac.equations.AcVariableType;
-import com.powsybl.openloadflow.ac.equations.ClosedBranchSide1ActiveFlowEquationTerm;
-import com.powsybl.openloadflow.ac.equations.ClosedBranchSide2ActiveFlowEquationTerm;
+import com.powsybl.openloadflow.ac.equations.*;
 import com.powsybl.openloadflow.ac.nr.NewtonRaphson;
 import com.powsybl.openloadflow.equations.Equation;
 import com.powsybl.openloadflow.equations.EquationSystem;
@@ -52,6 +49,14 @@ public abstract class AbstractNetworkState {
                 equationSystem.getEquation(bus2.getNum(), AcEquationType.BUS_TARGET_P)
                         .orElseThrow()
                         .addTerm(new ClosedBranchSide2ActiveFlowEquationTerm(branch, bus1, bus2, equationSystem.getVariableSet(), false, false));
+            } else if (bus1 != null) {
+                equationSystem.getEquation(bus1.getNum(), AcEquationType.BUS_TARGET_P)
+                        .orElseThrow()
+                        .addTerm(new OpenBranchSide1ActiveFlowEquationTerm(branch, bus2, equationSystem.getVariableSet(), false, false));
+            } else if (bus2 != null) {
+                equationSystem.getEquation(bus2.getNum(), AcEquationType.BUS_TARGET_P)
+                        .orElseThrow()
+                        .addTerm(new OpenBranchSide2ActiveFlowEquationTerm(branch, bus1, equationSystem.getVariableSet(), false, false));
             }
         }
         NewtonRaphson.initStateVector(lfNetwork, equationSystem, new PreviousValueVoltageInitializer());
