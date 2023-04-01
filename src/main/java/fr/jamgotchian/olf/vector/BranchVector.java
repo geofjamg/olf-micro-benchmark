@@ -1,4 +1,4 @@
-package fr.jamgotchian.olf.array;
+package fr.jamgotchian.olf.vector;
 
 import com.powsybl.openloadflow.network.LfBranch;
 import com.powsybl.openloadflow.network.LfBus;

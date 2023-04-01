@@ -11,9 +11,9 @@ import com.powsybl.openloadflow.network.LfNetwork;
 import com.powsybl.openloadflow.network.MostMeshedSlackBusSelector;
 import com.powsybl.openloadflow.network.impl.LfNetworkLoaderImpl;
 import com.powsybl.openloadflow.network.util.PreviousValueVoltageInitializer;
-import fr.jamgotchian.olf.array.BusActivePowerTargetEquationArray;
-import fr.jamgotchian.olf.array.QuantityVector;
-import fr.jamgotchian.olf.array.NetworkVector;
+import fr.jamgotchian.olf.vector.BusActivePowerTargetEquationArray;
+import fr.jamgotchian.olf.vector.QuantityVector;
+import fr.jamgotchian.olf.vector.NetworkVector;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
@@ -24,8 +24,6 @@ import java.util.List;
 
 @State(Scope.Thread)
 public abstract class AbstractNetworkState {
-
-    private Network network;
 
     private LfNetwork lfNetwork;
 
@@ -41,7 +39,7 @@ public abstract class AbstractNetworkState {
 
     @Setup(Level.Trial)
     public void doSetup() {
-        network = loadNetwork();
+        Network network = loadNetwork();
         lfNetwork = LfNetwork.load(network, new LfNetworkLoaderImpl(), new MostMeshedSlackBusSelector()).get(0);
         equations = new ArrayList<>();
         equationSystem = new EquationSystem<>();

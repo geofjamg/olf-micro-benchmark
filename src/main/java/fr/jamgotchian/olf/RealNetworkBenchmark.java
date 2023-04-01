@@ -3,7 +3,7 @@ package fr.jamgotchian.olf;
 import com.powsybl.openloadflow.ac.equations.AcEquationType;
 import com.powsybl.openloadflow.ac.equations.AcVariableType;
 import com.powsybl.openloadflow.equations.Equation;
-import fr.jamgotchian.olf.array.BusActivePowerTargetEquationArray;
+import fr.jamgotchian.olf.vector.BusActivePowerTargetEquationArray;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.List;
