@@ -39,8 +39,8 @@ public class BusActivePowerTargetEquationArray implements EquationArray<AcVariab
         double[] state = stateVector.get();
         for (int branchNum = 0; branchNum < branchArray.getLength(); branchNum++) {
             if (branchArray.active[branchNum] == 1) {
-                double ph1 = state[variableArray.phRow[branchArray.bus1Num[branchNum]]];
-                double ph2 = state[variableArray.phRow[branchArray.bus2Num[branchNum]]];
+                double ph1 = state[variableArray.ph1Row[branchNum]];
+                double ph2 = state[variableArray.ph2Row[branchNum]];
 
                 double theta1 = AbstractClosedBranchAcFlowEquationTerm.theta1(
                         branchArray.ksi[branchNum],
@@ -56,8 +56,8 @@ public class BusActivePowerTargetEquationArray implements EquationArray<AcVariab
                 double sinTheta2 = FastMath.sin(theta2);
 
                 if (branchArray.bus1Num[branchNum] != -1 && branchArray.bus2Num[branchNum] != -1) {
-                    double v1 = state[variableArray.vRow[branchArray.bus1Num[branchNum]]];
-                    double v2 = state[variableArray.vRow[branchArray.bus2Num[branchNum]]];
+                    double v1 = state[variableArray.v1Row[branchNum]];
+                    double v2 = state[variableArray.v2Row[branchNum]];
 
                     double p1 = ClosedBranchSide1ActiveFlowEquationTerm.p1(
                             branchArray.y[branchNum],

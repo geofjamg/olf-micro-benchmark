@@ -52,17 +52,17 @@ public abstract class AbstractNetworkState {
             } else if (bus1 != null) {
                 equationSystem.getEquation(bus1.getNum(), AcEquationType.BUS_TARGET_P)
                         .orElseThrow()
-                        .addTerm(new OpenBranchSide1ActiveFlowEquationTerm(branch, bus2, equationSystem.getVariableSet(), false, false));
+                        .addTerm(new OpenBranchSide1ActiveFlowEquationTerm(branch, bus1, equationSystem.getVariableSet(), false, false));
             } else if (bus2 != null) {
                 equationSystem.getEquation(bus2.getNum(), AcEquationType.BUS_TARGET_P)
                         .orElseThrow()
-                        .addTerm(new OpenBranchSide2ActiveFlowEquationTerm(branch, bus1, equationSystem.getVariableSet(), false, false));
+                        .addTerm(new OpenBranchSide2ActiveFlowEquationTerm(branch, bus2, equationSystem.getVariableSet(), false, false));
             }
         }
         NewtonRaphson.initStateVector(lfNetwork, equationSystem, new PreviousValueVoltageInitializer());
 
         BranchArray branchArray = new BranchArray(lfNetwork.getBranches());
-        VariableArray variableArray = new VariableArray(lfNetwork.getBuses().size(), equationSystem);
+        VariableArray variableArray = new VariableArray(lfNetwork.getBuses().size(), branchArray, equationSystem);
         equationArray = new BusActivePowerTargetEquationArray(lfNetwork.getBuses().size(), branchArray, variableArray, equationSystem.getStateVector());
     }
 
