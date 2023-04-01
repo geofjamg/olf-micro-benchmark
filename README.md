@@ -9,3 +9,9 @@ EquationTermBenchmark.staticMethodSortedByBranchWithCurrentCalculatedFromActiveP
 EquationTermBenchmark.staticMethodSortedByBranchWithCurrentCalculatedFromActivePowerAndStoreResultOnlyOneCosSin  avgt    5   205,125 ±  0,087  us/op
 EquationTermBenchmark.staticMethodSortedByTermType                                                               avgt    5   694,702 ±  2,119  us/op
 ```
+
+```
+Benchmark                         Mode  Cnt    Score    Error  Units
+RealNetworkBenchmark.arrayModel   avgt    5   88,064 ±  0,368  us/op
+RealNetworkBenchmark.objectModel  avgt    5  658,494 ± 25,900  us/op
+```

@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class RealNetworkBenchmark {
 
-//    @Benchmark
-    public void test(Rte6515NetworkState state) {
+    @Benchmark
+    public void objectModel(Rte6515NetworkState state) {
         List<Equation<AcVariableType, AcEquationType>> equations = state.getEquations();
         double[] values = new double[equations.size()];
         for (int i = 0; i < equations.size(); i++) {
@@ -23,7 +23,7 @@ public class RealNetworkBenchmark {
     }
 
     @Benchmark
-    public void test2(Rte6515NetworkState state) {
+    public void arrayModel(Rte6515NetworkState state) {
         BusActivePowerTargetEquationArray equationArray = state.getEquationArray();
         double[] values = new double[state.getLfNetwork().getBuses().size()];
         equationArray.eval(values);
