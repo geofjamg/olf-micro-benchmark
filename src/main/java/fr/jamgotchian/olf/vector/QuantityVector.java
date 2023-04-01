@@ -4,6 +4,7 @@ import com.powsybl.openloadflow.ac.equations.AcEquationType;
 import com.powsybl.openloadflow.ac.equations.AcVariableType;
 import com.powsybl.openloadflow.equations.*;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class QuantityVector implements EquationSystemIndexListener<AcVariableType, AcEquationType> {
@@ -20,6 +21,9 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
     final int[] ph1Row;
     final int[] ph2Row;
 
+    final int[] a1Row;
+    final int[] r1Row;
+
     final int[] pColumn;
     final int[] qColumn;
 
@@ -35,6 +39,8 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
         v2Row = new int[branchCount];
         ph1Row = new int[branchCount];
         ph2Row = new int[branchCount];
+        a1Row = new int[branchCount];
+        r1Row = new int[branchCount];
         pColumn = new int[busCount];
         qColumn = new int[busCount];
         updateVariables();
@@ -43,6 +49,9 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
     }
 
     private void updateVariables() {
+        Arrays.fill(a1Row, -1);
+        Arrays.fill(r1Row, -1);
+
         for (Variable<AcVariableType> v : equationSystem.getIndex().getSortedVariablesToFind()) {
             switch (v.getType()) {
                 case BUS_V:
@@ -51,6 +60,14 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
 
                 case BUS_PHI:
                     phRow[v.getElementNum()] = v.getRow();
+                    break;
+
+                case BRANCH_ALPHA1:
+                    a1Row[v.getElementNum()] = v.getRow();
+                    break;
+
+                case BRANCH_RHO1:
+                    r1Row[v.getElementNum()] = v.getRow();
                     break;
             }
         }

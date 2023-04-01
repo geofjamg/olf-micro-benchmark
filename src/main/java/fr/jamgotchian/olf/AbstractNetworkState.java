@@ -12,8 +12,8 @@ import com.powsybl.openloadflow.network.MostMeshedSlackBusSelector;
 import com.powsybl.openloadflow.network.impl.LfNetworkLoaderImpl;
 import com.powsybl.openloadflow.network.util.PreviousValueVoltageInitializer;
 import fr.jamgotchian.olf.vector.BusActivePowerTargetEquationArray;
-import fr.jamgotchian.olf.vector.QuantityVector;
 import fr.jamgotchian.olf.vector.NetworkVector;
+import fr.jamgotchian.olf.vector.QuantityVector;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
@@ -83,7 +83,6 @@ public abstract class AbstractNetworkState {
 
         networkVector = new NetworkVector(lfNetwork);
         quantityVector = new QuantityVector(networkVector, equationSystem);
-        equationArray = new BusActivePowerTargetEquationArray(networkVector.getBusVector(), quantityVector);
     }
 
     protected abstract Network loadNetwork();
@@ -106,9 +105,5 @@ public abstract class AbstractNetworkState {
 
     public QuantityVector getQuantityVector() {
         return quantityVector;
-    }
-
-    public BusActivePowerTargetEquationArray getEquationArray() {
-        return equationArray;
     }
 }

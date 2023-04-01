@@ -4,6 +4,7 @@ import com.powsybl.openloadflow.ac.equations.AcEquationType;
 import com.powsybl.openloadflow.ac.equations.AcVariableType;
 import com.powsybl.openloadflow.equations.Equation;
 import fr.jamgotchian.olf.vector.BusActivePowerTargetEquationArray;
+import fr.jamgotchian.olf.vector.BusReactivePowerTargetEquationArray;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -28,9 +29,11 @@ public class RealNetworkBenchmark {
     @Benchmark
     public void arrayModel(Rte6515NetworkState state, Blackhole bh) {
         state.getNetworkVector().updateState(state.getQuantityVector(), state.getEquationSystem().getStateVector());
-        BusActivePowerTargetEquationArray equationArray = state.getEquationArray();
+        BusActivePowerTargetEquationArray p = new BusActivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getQuantityVector());
+        BusReactivePowerTargetEquationArray q = new BusReactivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getQuantityVector());
         double[] values = new double[state.getEquationSystem().getIndex().getSortedEquationsToSolve().size()];
-        equationArray.eval(values);
+        p.eval(values);
+        q.eval(values);
         bh.consume(values);
     }
 }
