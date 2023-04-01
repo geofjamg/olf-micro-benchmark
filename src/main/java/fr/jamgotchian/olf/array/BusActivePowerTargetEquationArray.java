@@ -1,26 +1,19 @@
 package fr.jamgotchian.olf.array;
 
-import com.powsybl.openloadflow.ac.equations.*;
-import com.powsybl.openloadflow.equations.StateVector;
-import net.jafama.FastMath;
+import com.powsybl.openloadflow.ac.equations.AcEquationType;
+import com.powsybl.openloadflow.ac.equations.AcVariableType;
 
-import java.util.Arrays;
+import java.util.Objects;
 
 public class BusActivePowerTargetEquationArray implements EquationArray<AcVariableType, AcEquationType> {
 
-    private final BranchArray branchArray;
-    private final VariableArray variableArray;
-    private final StateVector stateVector;
+    private final BusVector busVector;
 
-    private final int[] active;
+    private final QuantityVector quantityVector;
 
-    public BusActivePowerTargetEquationArray(int busCount, BranchArray branchArray, VariableArray variableArray,
-                                             StateVector stateVector) {
-        this.branchArray = branchArray;
-        this.variableArray = variableArray;
-        this.stateVector = stateVector;
-        active = new int[busCount];
-        Arrays.fill(active, 1);
+    public BusActivePowerTargetEquationArray(BusVector busVector, QuantityVector quantityVector) {
+        this.busVector = Objects.requireNonNull(busVector);
+        this.quantityVector = Objects.requireNonNull(quantityVector);
     }
 
     @Override
@@ -30,64 +23,19 @@ public class BusActivePowerTargetEquationArray implements EquationArray<AcVariab
 
     @Override
     public boolean isActive(int num) {
-        return active[num] == 0;
+        return busVector.active[num] == 0;
     }
 
     @Override
     public void setActive(int num, boolean active) {
-        this.active[num] = active ? 1 : 0;
+        busVector.active[num] = active ? 1 : 0;
     }
 
     @Override
     public void eval(double[] values) {
-        double[] state = stateVector.get();
-        for (int branchNum = 0; branchNum < branchArray.getLength(); branchNum++) {
-            if (branchArray.active[branchNum] == 1) {
-                double ph1 = state[variableArray.ph1Row[branchNum]];
-                double ph2 = state[variableArray.ph2Row[branchNum]];
-
-                double theta1 = AbstractClosedBranchAcFlowEquationTerm.theta1(
-                        branchArray.ksi[branchNum],
-                        ph1,
-                        branchArray.a1[branchNum],
-                        ph2);
-                double theta2 = AbstractClosedBranchAcFlowEquationTerm.theta2(
-                        branchArray.ksi[branchNum],
-                        ph1,
-                        branchArray.a1[branchNum],
-                        ph2);
-                double sinTheta1 = FastMath.sin(theta1);
-                double sinTheta2 = FastMath.sin(theta2);
-
-                if (branchArray.bus1Num[branchNum] != -1 && branchArray.bus2Num[branchNum] != -1) {
-                    double v1 = state[variableArray.v1Row[branchNum]];
-                    double v2 = state[variableArray.v2Row[branchNum]];
-
-                    double p1 = ClosedBranchSide1ActiveFlowEquationTerm.p1(
-                            branchArray.y[branchNum],
-                            branchArray.sinKsi[branchNum],
-                            branchArray.g1[branchNum],
-                            v1,
-                            branchArray.r1[branchNum],
-                            v2,
-                            sinTheta1);
-                    values[branchArray.bus1Num[branchNum]] += p1;
-
-                    double p2 = ClosedBranchSide2ActiveFlowEquationTerm.p2(
-                            branchArray.y[branchNum],
-                            branchArray.sinKsi[branchNum],
-                            branchArray.g2[branchNum],
-                            v1,
-                            branchArray.r1[branchNum],
-                            v2,
-                            sinTheta2);
-                    values[branchArray.bus2Num[branchNum]] += p2;
-                }
-            }
-        }
-
-        for (int busNum = 0; busNum < values.length; busNum++) {
-            values[busNum] *= active[busNum];
+        for (int busNum = 0; busNum < busVector.getSize(); busNum++) {
+            values[quantityVector.pColumn[busNum]] = busVector.p[busNum];
+            values[quantityVector.qColumn[busNum]] = busVector.q[busNum];
         }
     }
 }

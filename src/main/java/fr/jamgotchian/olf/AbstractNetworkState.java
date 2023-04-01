@@ -11,9 +11,9 @@ import com.powsybl.openloadflow.network.LfNetwork;
 import com.powsybl.openloadflow.network.MostMeshedSlackBusSelector;
 import com.powsybl.openloadflow.network.impl.LfNetworkLoaderImpl;
 import com.powsybl.openloadflow.network.util.PreviousValueVoltageInitializer;
-import fr.jamgotchian.olf.array.BranchArray;
 import fr.jamgotchian.olf.array.BusActivePowerTargetEquationArray;
-import fr.jamgotchian.olf.array.VariableArray;
+import fr.jamgotchian.olf.array.QuantityVector;
+import fr.jamgotchian.olf.array.NetworkVector;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
@@ -31,6 +31,12 @@ public abstract class AbstractNetworkState {
 
     private List<Equation<AcVariableType, AcEquationType>> equations;
 
+    private EquationSystem<AcVariableType, AcEquationType> equationSystem;
+
+    private NetworkVector networkVector;
+
+    private QuantityVector quantityVector;
+
     private BusActivePowerTargetEquationArray equationArray;
 
     @Setup(Level.Trial)
@@ -38,7 +44,7 @@ public abstract class AbstractNetworkState {
         network = loadNetwork();
         lfNetwork = LfNetwork.load(network, new LfNetworkLoaderImpl(), new MostMeshedSlackBusSelector()).get(0);
         equations = new ArrayList<>();
-        EquationSystem<AcVariableType, AcEquationType> equationSystem = new EquationSystem<>();
+        equationSystem = new EquationSystem<>();
         for (LfBus bus : lfNetwork.getBuses()) {
             equations.add(equationSystem.createEquation(bus.getNum(), AcEquationType.BUS_TARGET_P));
         }
@@ -64,9 +70,9 @@ public abstract class AbstractNetworkState {
         }
         NewtonRaphson.initStateVector(lfNetwork, equationSystem, new PreviousValueVoltageInitializer());
 
-        BranchArray branchArray = new BranchArray(lfNetwork.getBranches());
-        VariableArray variableArray = new VariableArray(lfNetwork.getBuses().size(), branchArray, equationSystem);
-        equationArray = new BusActivePowerTargetEquationArray(lfNetwork.getBuses().size(), branchArray, variableArray, equationSystem.getStateVector());
+        networkVector = new NetworkVector(lfNetwork);
+        quantityVector = new QuantityVector(networkVector, equationSystem);
+        equationArray = new BusActivePowerTargetEquationArray(networkVector.getBusVector(), quantityVector);
     }
 
     protected abstract Network loadNetwork();
@@ -77,6 +83,18 @@ public abstract class AbstractNetworkState {
 
     public List<Equation<AcVariableType, AcEquationType>> getEquations() {
         return equations;
+    }
+
+    public EquationSystem<AcVariableType, AcEquationType> getEquationSystem() {
+        return equationSystem;
+    }
+
+    public NetworkVector getNetworkVector() {
+        return networkVector;
+    }
+
+    public QuantityVector getQuantityVector() {
+        return quantityVector;
     }
 
     public BusActivePowerTargetEquationArray getEquationArray() {

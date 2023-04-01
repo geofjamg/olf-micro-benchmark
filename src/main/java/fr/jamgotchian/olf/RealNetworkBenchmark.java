@@ -25,6 +25,7 @@ public class RealNetworkBenchmark {
 
     @Benchmark
     public void arrayModel(Rte6515NetworkState state) {
+        state.getNetworkVector().updateState(state.getQuantityVector(), state.getEquationSystem().getStateVector());
         BusActivePowerTargetEquationArray equationArray = state.getEquationArray();
         double[] values = new double[state.getLfNetwork().getBuses().size()];
         equationArray.eval(values);

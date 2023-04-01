@@ -7,9 +7,7 @@ import net.jafama.FastMath;
 
 import java.util.List;
 
-public class BranchArray {
-
-    final int length;
+public class BranchVector {
 
     final int[] bus1Num;
     final int[] bus2Num;
@@ -27,21 +25,30 @@ public class BranchArray {
 
     final int[] active;
 
-    public BranchArray(List<LfBranch> branches) {
-        length = branches.size();
-        bus1Num = new int[length];
-        bus2Num = new int[length];
-        y = new double[length];
-        ksi = new double[length];
-        cosKsi = new double[length];
-        sinKsi = new double[length];
-        g1 = new double[length];
-        g2 = new double[length];
-        b1 = new double[length];
-        b2 = new double[length];
-        r1 = new double[length];
-        a1 = new double[length];
-        active = new int[length];
+    final double[] p1;
+    final double[] p2;
+    final double[] q1;
+    final double[] q2;
+
+    public BranchVector(List<LfBranch> branches) {
+        int size = branches.size();
+        bus1Num = new int[size];
+        bus2Num = new int[size];
+        y = new double[size];
+        ksi = new double[size];
+        cosKsi = new double[size];
+        sinKsi = new double[size];
+        g1 = new double[size];
+        g2 = new double[size];
+        b1 = new double[size];
+        b2 = new double[size];
+        r1 = new double[size];
+        a1 = new double[size];
+        active = new int[size];
+        p1 = new double[size];
+        p2 = new double[size];
+        q1 = new double[size];
+        q2 = new double[size];
         for (int i = 0; i < branches.size(); i++) {
             LfBranch branch = branches.get(i);
             LfBus bus1 = branch.getBus1();
@@ -62,11 +69,11 @@ public class BranchArray {
             g2[i] = piModel.getG2();
             r1[i] = piModel.getR1();
             a1[i] = piModel.getA1();
-            active[i] = 1;
+            active[i] = branch.isDisabled() ? 0 : 1;
         }
     }
 
-    public int getLength() {
-        return length;
+    public int getSize() {
+        return active.length;
     }
 }
