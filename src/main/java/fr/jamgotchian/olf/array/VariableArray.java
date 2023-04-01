@@ -1,4 +1,4 @@
-package fr.jamgotchian.olf;
+package fr.jamgotchian.olf.array;
 
 import com.powsybl.openloadflow.ac.equations.AcEquationType;
 import com.powsybl.openloadflow.ac.equations.AcVariableType;
