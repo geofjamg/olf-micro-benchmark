@@ -1,19 +1,11 @@
 package fr.jamgotchian.olf.vector;
 
 import com.powsybl.openloadflow.ac.equations.AcEquationType;
-import com.powsybl.openloadflow.ac.equations.AcVariableType;
 
-import java.util.Objects;
-
-public class BusReactivePowerTargetEquationArray implements EquationArray<AcVariableType, AcEquationType> {
-
-    private final BusVector busVector;
-
-    private final QuantityVector quantityVector;
+public class BusReactivePowerTargetEquationArray extends AbstractBusEquationArray {
 
     public BusReactivePowerTargetEquationArray(BusVector busVector, QuantityVector quantityVector) {
-        this.busVector = Objects.requireNonNull(busVector);
-        this.quantityVector = Objects.requireNonNull(quantityVector);
+        super(busVector, quantityVector);
     }
 
     @Override
