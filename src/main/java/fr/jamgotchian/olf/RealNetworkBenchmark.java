@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class RealNetworkBenchmark {
 
-    @Benchmark
+  //  @Benchmark
     public void objectModel(Rte6515NetworkState state, Blackhole bh) {
         List<Equation<AcVariableType, AcEquationType>> equations = state.getEquations();
         double[] values = new double[equations.size()];

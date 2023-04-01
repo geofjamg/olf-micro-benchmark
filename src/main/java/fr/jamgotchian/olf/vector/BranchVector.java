@@ -29,6 +29,8 @@ public class BranchVector {
     final double[] p2;
     final double[] q1;
     final double[] q2;
+    final double[] i1;
+    final double[] i2;
 
     public BranchVector(List<LfBranch> branches) {
         int size = branches.size();
@@ -49,6 +51,8 @@ public class BranchVector {
         p2 = new double[size];
         q1 = new double[size];
         q2 = new double[size];
+        i1 = new double[size];
+        i2 = new double[size];
         for (int i = 0; i < branches.size(); i++) {
             LfBranch branch = branches.get(i);
             LfBus bus1 = branch.getBus1();

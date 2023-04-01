@@ -11,6 +11,8 @@ import java.util.Objects;
 
 public class NetworkVector {
 
+    private static final double SQRT3 = FastMath.sqrt(3);
+
     private final BusVector busVector;
     private final BranchVector branchVector;
 
@@ -67,16 +69,6 @@ public class NetworkVector {
                             sinTheta1);
                     busVector.p[branchVector.bus1Num[branchNum]] += branchVector.p1[branchNum];
 
-                    branchVector.p2[branchNum] = ClosedBranchSide2ActiveFlowEquationTerm.p2(
-                            branchVector.y[branchNum],
-                            branchVector.sinKsi[branchNum],
-                            branchVector.g2[branchNum],
-                            v1,
-                            branchVector.r1[branchNum],
-                            v2,
-                            sinTheta2);
-                    busVector.p[branchVector.bus2Num[branchNum]] += branchVector.p2[branchNum];
-
                     branchVector.q1[branchNum] = ClosedBranchSide1ReactiveFlowEquationTerm.q1(
                             branchVector.y[branchNum],
                             branchVector.cosKsi[branchNum],
@@ -87,6 +79,18 @@ public class NetworkVector {
                             cosTheta1);
                     busVector.q[branchVector.bus1Num[branchNum]] += branchVector.q1[branchNum];
 
+                    branchVector.i1[branchNum] = FastMath.hypot(branchVector.p1[branchNum], branchVector.q1[branchNum]) / (v1 * SQRT3 / 1000);
+
+                    branchVector.p2[branchNum] = ClosedBranchSide2ActiveFlowEquationTerm.p2(
+                            branchVector.y[branchNum],
+                            branchVector.sinKsi[branchNum],
+                            branchVector.g2[branchNum],
+                            v1,
+                            branchVector.r1[branchNum],
+                            v2,
+                            sinTheta2);
+                    busVector.p[branchVector.bus2Num[branchNum]] += branchVector.p2[branchNum];
+
                     branchVector.q2[branchNum] = ClosedBranchSide2ReactiveFlowEquationTerm.q2(
                             branchVector.y[branchNum],
                             branchVector.cosKsi[branchNum],
@@ -96,7 +100,13 @@ public class NetworkVector {
                             v2,
                             cosTheta2);
                     busVector.q[branchVector.bus2Num[branchNum]] += branchVector.q2[branchNum];
+
+                    branchVector.i2[branchNum] = FastMath.hypot(branchVector.p2[branchNum], branchVector.q2[branchNum]) / (v2 * SQRT3 / 1000);
                 } else if (branchVector.bus1Num[branchNum] != -1) {
+                    branchVector.p2[branchNum] = 0;
+                    branchVector.q2[branchNum] = 0;
+                    branchVector.i2[branchNum] = 0;
+
                     double v1 = state[quantityVector.v1Row[branchNum]];
 
                     branchVector.p1[branchNum] = OpenBranchSide2ActiveFlowEquationTerm.p1(
@@ -120,7 +130,13 @@ public class NetworkVector {
                             v1,
                             branchVector.r1[branchNum]);
                     busVector.q[branchVector.bus1Num[branchNum]] += branchVector.q1[branchNum];
+
+                    branchVector.i1[branchNum] = FastMath.hypot(branchVector.p1[branchNum], branchVector.q1[branchNum]) / (v1 * SQRT3 / 1000);
                 } else if (branchVector.bus2Num[branchNum] != -1) {
+                    branchVector.p1[branchNum] = 0;
+                    branchVector.q1[branchNum] = 0;
+                    branchVector.i1[branchNum] = 0;
+
                     double v2 = state[quantityVector.v2Row[branchNum]];
 
                     branchVector.p2[branchNum] = OpenBranchSide1ActiveFlowEquationTerm.p2(
@@ -142,9 +158,13 @@ public class NetworkVector {
                             branchVector.b2[branchNum],
                             v2);
                     busVector.q[branchVector.bus2Num[branchNum]] += branchVector.q2[branchNum];
+
+                    branchVector.i2[branchNum] = FastMath.hypot(branchVector.p2[branchNum], branchVector.q2[branchNum]) / (v2 * SQRT3 / 1000);
                 } else {
                     branchVector.p1[branchNum] = 0;
                     branchVector.p2[branchNum] = 0;
+                    branchVector.i1[branchNum] = 0;
+                    branchVector.i2[branchNum] = 0;
                 }
             }
         }
