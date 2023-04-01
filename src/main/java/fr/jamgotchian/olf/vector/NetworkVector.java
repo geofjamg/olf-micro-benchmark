@@ -1,8 +1,6 @@
 package fr.jamgotchian.olf.vector;
 
-import com.powsybl.openloadflow.ac.equations.AbstractClosedBranchAcFlowEquationTerm;
-import com.powsybl.openloadflow.ac.equations.ClosedBranchSide1ActiveFlowEquationTerm;
-import com.powsybl.openloadflow.ac.equations.ClosedBranchSide2ActiveFlowEquationTerm;
+import com.powsybl.openloadflow.ac.equations.*;
 import com.powsybl.openloadflow.equations.StateVector;
 import com.powsybl.openloadflow.network.LfNetwork;
 import net.jafama.FastMath;
@@ -73,6 +71,31 @@ public class NetworkVector {
                             branchVector.r1[branchNum],
                             v2,
                             sinTheta2);
+                    busVector.p[branchVector.bus2Num[branchNum]] += branchVector.p2[branchNum];
+                } else if (branchVector.bus1Num[branchNum] != -1) {
+                    double v1 = state[quantityVector.v1Row[branchNum]];
+
+                    branchVector.p1[branchNum] = OpenBranchSide2ActiveFlowEquationTerm.p1(
+                            branchVector.y[branchNum],
+                            branchVector.cosKsi[branchNum],
+                            branchVector.sinKsi[branchNum],
+                            branchVector.g1[branchNum],
+                            branchVector.g2[branchNum],
+                            branchVector.b2[branchNum],
+                            v1,
+                            branchVector.r1[branchNum]);
+                    busVector.p[branchVector.bus1Num[branchNum]] += branchVector.p1[branchNum];
+                } else if (branchVector.bus2Num[branchNum] != -1) {
+                    double v2 = state[quantityVector.v2Row[branchNum]];
+
+                    branchVector.p2[branchNum] = OpenBranchSide1ActiveFlowEquationTerm.p2(
+                            branchVector.y[branchNum],
+                            branchVector.cosKsi[branchNum],
+                            branchVector.sinKsi[branchNum],
+                            branchVector.g1[branchNum],
+                            branchVector.b1[branchNum],
+                            branchVector.g2[branchNum],
+                            v2);
                     busVector.p[branchVector.bus2Num[branchNum]] += branchVector.p2[branchNum];
                 } else {
                     branchVector.p1[branchNum] = 0;

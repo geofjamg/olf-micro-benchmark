@@ -6,9 +6,5 @@ public interface EquationArray<V extends Enum<V> & Quantity, E extends Enum<E> &
 
     E getType();
 
-    boolean isActive(int num);
-
-    void setActive(int num, boolean active);
-
     void eval(double[] values);
 }

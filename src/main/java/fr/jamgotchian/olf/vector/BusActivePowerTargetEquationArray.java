@@ -22,16 +22,6 @@ public class BusActivePowerTargetEquationArray implements EquationArray<AcVariab
     }
 
     @Override
-    public boolean isActive(int num) {
-        return busVector.active[num] == 0;
-    }
-
-    @Override
-    public void setActive(int num, boolean active) {
-        busVector.active[num] = active ? 1 : 0;
-    }
-
-    @Override
     public void eval(double[] values) {
         for (int busNum = 0; busNum < busVector.getSize(); busNum++) {
             values[quantityVector.pColumn[busNum]] = busVector.p[busNum];
