@@ -3,6 +3,7 @@ package fr.jamgotchian.olf.vector;
 import com.powsybl.openloadflow.network.LfBranch;
 import com.powsybl.openloadflow.network.LfBus;
 import com.powsybl.openloadflow.network.PiModel;
+import com.powsybl.openloadflow.util.Evaluable;
 import net.jafama.FastMath;
 
 import java.util.List;
@@ -79,5 +80,29 @@ public class BranchVector {
 
     public int getSize() {
         return active.length;
+    }
+
+    public Evaluable getP1(int num) {
+        return () -> p1[num];
+    }
+
+    public Evaluable getQ1(int num) {
+        return () -> q1[num];
+    }
+
+    public Evaluable getI1(int num) {
+        return () -> i1[num];
+    }
+
+    public Evaluable getP2(int num) {
+        return () -> p2[num];
+    }
+
+    public Evaluable getQ2(int num) {
+        return () -> q2[num];
+    }
+
+    public Evaluable getI2(int num) {
+        return () -> i2[num];
     }
 }
