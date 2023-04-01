@@ -3,6 +3,7 @@ package fr.jamgotchian.olf.vector;
 import com.powsybl.openloadflow.ac.equations.*;
 import com.powsybl.openloadflow.equations.StateVector;
 import com.powsybl.openloadflow.network.LfNetwork;
+import net.jafama.DoubleWrapper;
 import net.jafama.FastMath;
 
 import java.util.Arrays;
@@ -31,6 +32,7 @@ public class NetworkVector {
         double[] state = stateVector.get();
         Arrays.fill(busVector.p, 0);
         Arrays.fill(busVector.q, 0);
+        var w = new DoubleWrapper();
         for (int branchNum = 0; branchNum < branchVector.getSize(); branchNum++) {
             if (branchVector.active[branchNum] == 1) {
                 double ph1 = state[quantityVector.ph1Row[branchNum]];
@@ -46,8 +48,10 @@ public class NetworkVector {
                         ph1,
                         branchVector.a1[branchNum],
                         ph2);
-                double sinTheta1 = FastMath.sin(theta1);
-                double sinTheta2 = FastMath.sin(theta2);
+                double sinTheta1 = FastMath.sinAndCos(theta1, w);
+                double cosTheta1 = w.value;
+                double sinTheta2 = FastMath.sinAndCos(theta2, w);
+                double cosTheta2 = w.value;
 
                 if (branchVector.bus1Num[branchNum] != -1 && branchVector.bus2Num[branchNum] != -1) {
                     double v1 = state[quantityVector.v1Row[branchNum]];
@@ -72,6 +76,26 @@ public class NetworkVector {
                             v2,
                             sinTheta2);
                     busVector.p[branchVector.bus2Num[branchNum]] += branchVector.p2[branchNum];
+
+                    branchVector.q1[branchNum] = ClosedBranchSide1ReactiveFlowEquationTerm.q1(
+                            branchVector.y[branchNum],
+                            branchVector.cosKsi[branchNum],
+                            branchVector.b1[branchNum],
+                            v1,
+                            branchVector.r1[branchNum],
+                            v2,
+                            cosTheta1);
+                    busVector.q[branchVector.bus1Num[branchNum]] += branchVector.q1[branchNum];
+
+                    branchVector.q2[branchNum] = ClosedBranchSide2ReactiveFlowEquationTerm.q2(
+                            branchVector.y[branchNum],
+                            branchVector.cosKsi[branchNum],
+                            branchVector.b2[branchNum],
+                            v1,
+                            branchVector.r1[branchNum],
+                            v2,
+                            cosTheta2);
+                    busVector.q[branchVector.bus2Num[branchNum]] += branchVector.q2[branchNum];
                 } else if (branchVector.bus1Num[branchNum] != -1) {
                     double v1 = state[quantityVector.v1Row[branchNum]];
 
@@ -85,6 +109,17 @@ public class NetworkVector {
                             v1,
                             branchVector.r1[branchNum]);
                     busVector.p[branchVector.bus1Num[branchNum]] += branchVector.p1[branchNum];
+
+                    branchVector.q1[branchNum] = OpenBranchSide2ReactiveFlowEquationTerm.q1(
+                            branchVector.y[branchNum],
+                            branchVector.cosKsi[branchNum],
+                            branchVector.sinKsi[branchNum],
+                            branchVector.b1[branchNum],
+                            branchVector.g2[branchNum],
+                            branchVector.b2[branchNum],
+                            v1,
+                            branchVector.r1[branchNum]);
+                    busVector.q[branchVector.bus1Num[branchNum]] += branchVector.q1[branchNum];
                 } else if (branchVector.bus2Num[branchNum] != -1) {
                     double v2 = state[quantityVector.v2Row[branchNum]];
 
@@ -97,6 +132,16 @@ public class NetworkVector {
                             branchVector.g2[branchNum],
                             v2);
                     busVector.p[branchVector.bus2Num[branchNum]] += branchVector.p2[branchNum];
+
+                    branchVector.q2[branchNum] = OpenBranchSide1ReactiveFlowEquationTerm.q2(
+                            branchVector.y[branchNum],
+                            branchVector.cosKsi[branchNum],
+                            branchVector.sinKsi[branchNum],
+                            branchVector.g1[branchNum],
+                            branchVector.b1[branchNum],
+                            branchVector.b2[branchNum],
+                            v2);
+                    busVector.q[branchVector.bus2Num[branchNum]] += branchVector.q2[branchNum];
                 } else {
                     branchVector.p1[branchNum] = 0;
                     branchVector.p2[branchNum] = 0;
@@ -106,6 +151,7 @@ public class NetworkVector {
 
         for (int busNum = 0; busNum < busVector.getSize(); busNum++) {
             busVector.p[busNum] *= busVector.active[busNum];
+            busVector.q[busNum] *= busVector.active[busNum];
         }
     }
 }

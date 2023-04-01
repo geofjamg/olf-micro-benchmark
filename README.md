@@ -11,7 +11,7 @@ EquationTermBenchmark.staticMethodSortedByTermType                              
 ```
 
 ```
-Benchmark                         Mode  Cnt    Score    Error  Units
-RealNetworkBenchmark.arrayModel   avgt    5   88,064 ±  0,368  us/op
-RealNetworkBenchmark.objectModel  avgt    5  658,494 ± 25,900  us/op
+Benchmark                         Mode  Cnt     Score    Error  Units
+RealNetworkBenchmark.arrayModel   avgt    5   142,915 ±  0,641  us/op
+RealNetworkBenchmark.objectModel  avgt    5  1673,484 ± 60,862  us/op
 ```

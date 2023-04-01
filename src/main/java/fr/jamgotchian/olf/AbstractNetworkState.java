@@ -45,6 +45,7 @@ public abstract class AbstractNetworkState {
         equationSystem = new EquationSystem<>();
         for (LfBus bus : lfNetwork.getBuses()) {
             equations.add(equationSystem.createEquation(bus.getNum(), AcEquationType.BUS_TARGET_P));
+            equations.add(equationSystem.createEquation(bus.getNum(), AcEquationType.BUS_TARGET_Q));
         }
         for (LfBranch branch : lfNetwork.getBranches()) {
             LfBus bus1 = branch.getBus1();
@@ -56,14 +57,26 @@ public abstract class AbstractNetworkState {
                 equationSystem.getEquation(bus2.getNum(), AcEquationType.BUS_TARGET_P)
                         .orElseThrow()
                         .addTerm(new ClosedBranchSide2ActiveFlowEquationTerm(branch, bus1, bus2, equationSystem.getVariableSet(), false, false));
+                equationSystem.getEquation(bus1.getNum(), AcEquationType.BUS_TARGET_Q)
+                        .orElseThrow()
+                        .addTerm(new ClosedBranchSide1ReactiveFlowEquationTerm(branch, bus1, bus2, equationSystem.getVariableSet(), false, false));
+                equationSystem.getEquation(bus2.getNum(), AcEquationType.BUS_TARGET_Q)
+                        .orElseThrow()
+                        .addTerm(new ClosedBranchSide2ReactiveFlowEquationTerm(branch, bus1, bus2, equationSystem.getVariableSet(), false, false));
             } else if (bus1 != null) {
                 equationSystem.getEquation(bus1.getNum(), AcEquationType.BUS_TARGET_P)
                         .orElseThrow()
                         .addTerm(new OpenBranchSide1ActiveFlowEquationTerm(branch, bus1, equationSystem.getVariableSet(), false, false));
+                equationSystem.getEquation(bus1.getNum(), AcEquationType.BUS_TARGET_Q)
+                        .orElseThrow()
+                        .addTerm(new OpenBranchSide1ReactiveFlowEquationTerm(branch, bus1, equationSystem.getVariableSet(), false, false));
             } else if (bus2 != null) {
                 equationSystem.getEquation(bus2.getNum(), AcEquationType.BUS_TARGET_P)
                         .orElseThrow()
                         .addTerm(new OpenBranchSide2ActiveFlowEquationTerm(branch, bus2, equationSystem.getVariableSet(), false, false));
+                equationSystem.getEquation(bus2.getNum(), AcEquationType.BUS_TARGET_Q)
+                        .orElseThrow()
+                        .addTerm(new OpenBranchSide2ReactiveFlowEquationTerm(branch, bus2, equationSystem.getVariableSet(), false, false));
             }
         }
         NewtonRaphson.initStateVector(lfNetwork, equationSystem, new PreviousValueVoltageInitializer());
