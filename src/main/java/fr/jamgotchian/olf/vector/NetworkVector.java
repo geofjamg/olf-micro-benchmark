@@ -7,6 +7,7 @@ import com.powsybl.openloadflow.equations.StateVector;
 import com.powsybl.openloadflow.network.LfNetwork;
 import net.jafama.FastMath;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class NetworkVector {
@@ -30,6 +31,8 @@ public class NetworkVector {
 
     public void updateState(QuantityVector quantityVector, StateVector stateVector) {
         double[] state = stateVector.get();
+        Arrays.fill(busVector.p, 0);
+        Arrays.fill(busVector.q, 0);
         for (int branchNum = 0; branchNum < branchVector.getSize(); branchNum++) {
             if (branchVector.active[branchNum] == 1) {
                 double ph1 = state[quantityVector.ph1Row[branchNum]];

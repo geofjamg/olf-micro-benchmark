@@ -35,7 +35,6 @@ public class BusActivePowerTargetEquationArray implements EquationArray<AcVariab
     public void eval(double[] values) {
         for (int busNum = 0; busNum < busVector.getSize(); busNum++) {
             values[quantityVector.pColumn[busNum]] = busVector.p[busNum];
-            values[quantityVector.qColumn[busNum]] = busVector.q[busNum];
         }
     }
 }
