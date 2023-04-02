@@ -1,8 +1,9 @@
 package fr.jamgotchian.olf.vector;
 
 import com.powsybl.openloadflow.ac.equations.AcEquationType;
+import com.powsybl.openloadflow.ac.equations.AcVariableType;
 
-public class BusActivePowerTargetEquationArray extends AbstractBusEquationArray {
+public class BusActivePowerTargetEquationArray extends AbstractEquationArray<BusVector, AcVariableType, AcEquationType> {
 
     public BusActivePowerTargetEquationArray(BusVector busVector, VariableVector variableVector) {
         super(busVector, variableVector);
@@ -14,7 +15,7 @@ public class BusActivePowerTargetEquationArray extends AbstractBusEquationArray 
     }
 
     @Override
-    public void eval(double[] values) {
-        System.arraycopy(elementVector.p, 0, values, firstColumn, elementVector.getSize());
+    protected double[] getAttribute() {
+        return elementVector.p;
     }
 }

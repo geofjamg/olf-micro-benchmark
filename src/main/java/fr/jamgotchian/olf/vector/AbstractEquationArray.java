@@ -1,7 +1,5 @@
 package fr.jamgotchian.olf.vector;
 
-import com.powsybl.openloadflow.ac.equations.AcEquationType;
-import com.powsybl.openloadflow.ac.equations.AcVariableType;
 import com.powsybl.openloadflow.equations.Quantity;
 
 import java.util.Objects;
@@ -59,6 +57,19 @@ public abstract class AbstractEquationArray<EV extends ElementVector, V extends 
                 length++;
             } else {
                 length--;
+            }
+        }
+    }
+
+    protected abstract double[] getAttribute();
+
+    @Override
+    public void eval(double[] values) {
+        int column = firstColumn;
+        double[] attribute = getAttribute();
+        for (int elementNum = 0; elementNum < elementVector.getSize(); elementNum++) {
+            if (isActive(elementNum)) {
+                values[column++] = attribute[elementNum];
             }
         }
     }
