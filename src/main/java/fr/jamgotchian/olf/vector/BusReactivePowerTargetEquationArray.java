@@ -15,6 +15,6 @@ public class BusReactivePowerTargetEquationArray extends AbstractBusEquationArra
 
     @Override
     public void eval(double[] values) {
-        System.arraycopy(busVector.q, 0, values, firstColumn, busVector.getSize());
+        System.arraycopy(elementVector.q, 0, values, firstColumn, elementVector.getSize());
     }
 }

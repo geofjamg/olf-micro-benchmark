@@ -4,7 +4,7 @@ import com.powsybl.openloadflow.network.LfBus;
 
 import java.util.List;
 
-public class BusVector {
+public class BusVector implements ElementVector {
 
     final int[] status;
 
@@ -21,7 +21,13 @@ public class BusVector {
         }
     }
 
+    @Override
     public int getSize() {
         return status.length;
+    }
+
+    @Override
+    public boolean isActive(int elementNum) {
+        return status[elementNum] == 1;
     }
 }

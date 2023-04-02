@@ -8,7 +8,7 @@ import net.jafama.FastMath;
 
 import java.util.List;
 
-public class BranchVector {
+public class BranchVector implements ElementVector {
 
     final int[] bus1Num;
     final int[] bus2Num;
@@ -78,8 +78,14 @@ public class BranchVector {
         }
     }
 
+    @Override
     public int getSize() {
         return status.length;
+    }
+
+    @Override
+    public boolean isActive(int elementNum) {
+        return status[elementNum] == 1;
     }
 
     public Evaluable getP1(int num) {
