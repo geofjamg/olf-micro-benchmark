@@ -7,7 +7,7 @@ import com.powsybl.openloadflow.equations.*;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class QuantityVector implements EquationSystemIndexListener<AcVariableType, AcEquationType> {
+public class VariableVector implements EquationSystemIndexListener<AcVariableType, AcEquationType> {
 
     private final NetworkVector networkVector;
 
@@ -24,10 +24,7 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
     final int[] a1Row;
     final int[] r1Row;
 
-    final int[] pColumn;
-    final int[] qColumn;
-
-    public QuantityVector(NetworkVector networkVector,
+    public VariableVector(NetworkVector networkVector,
                           EquationSystem<AcVariableType, AcEquationType> equationSystem) {
         this.networkVector = Objects.requireNonNull(networkVector);
         this.equationSystem = Objects.requireNonNull(equationSystem);
@@ -41,10 +38,7 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
         ph2Row = new int[branchCount];
         a1Row = new int[branchCount];
         r1Row = new int[branchCount];
-        pColumn = new int[busCount];
-        qColumn = new int[busCount];
         updateVariables();
-        updateEquations();
         equationSystem.getIndex().addListener(this);
     }
 
@@ -83,22 +77,6 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
         }
     }
 
-    private void updateEquations() {
-        for (Equation<AcVariableType, AcEquationType> equation : equationSystem.getIndex().getSortedEquationsToSolve()) {
-            switch (equation.getType()) {
-                case BUS_TARGET_P:
-                    pColumn[equation.getElementNum()] = equation.getColumn();
-                    break;
-                case BUS_TARGET_Q:
-                    qColumn[equation.getElementNum()] = equation.getColumn();
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
     @Override
     public void onVariableChange(Variable<AcVariableType> variable, ChangeType changeType) {
         updateVariables();
@@ -106,11 +84,11 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
 
     @Override
     public void onEquationChange(Equation<AcVariableType, AcEquationType> equation, ChangeType changeType) {
-        updateEquations();
+        // nothing to do
     }
 
     @Override
     public void onEquationTermChange(EquationTerm<AcVariableType, AcEquationType> equationTerm) {
-        // northing to do
+        // nothing to do
     }
 }

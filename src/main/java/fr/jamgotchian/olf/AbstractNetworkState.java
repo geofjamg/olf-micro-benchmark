@@ -13,7 +13,7 @@ import com.powsybl.openloadflow.network.impl.LfNetworkLoaderImpl;
 import com.powsybl.openloadflow.network.util.PreviousValueVoltageInitializer;
 import fr.jamgotchian.olf.vector.BusActivePowerTargetEquationArray;
 import fr.jamgotchian.olf.vector.NetworkVector;
-import fr.jamgotchian.olf.vector.QuantityVector;
+import fr.jamgotchian.olf.vector.VariableVector;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
@@ -33,7 +33,7 @@ public abstract class AbstractNetworkState {
 
     private NetworkVector networkVector;
 
-    private QuantityVector quantityVector;
+    private VariableVector variableVector;
 
     private BusActivePowerTargetEquationArray equationArray;
 
@@ -82,7 +82,7 @@ public abstract class AbstractNetworkState {
         NewtonRaphson.initStateVector(lfNetwork, equationSystem, new PreviousValueVoltageInitializer());
 
         networkVector = new NetworkVector(lfNetwork);
-        quantityVector = new QuantityVector(networkVector, equationSystem);
+        variableVector = new VariableVector(networkVector, equationSystem);
     }
 
     protected abstract Network loadNetwork();
@@ -103,7 +103,7 @@ public abstract class AbstractNetworkState {
         return networkVector;
     }
 
-    public QuantityVector getQuantityVector() {
-        return quantityVector;
+    public VariableVector getQuantityVector() {
+        return variableVector;
     }
 }

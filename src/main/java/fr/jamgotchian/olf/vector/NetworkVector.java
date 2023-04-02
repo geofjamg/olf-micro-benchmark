@@ -30,16 +30,16 @@ public class NetworkVector {
         return branchVector;
     }
 
-    public void updateState(QuantityVector quantityVector, StateVector stateVector) {
+    public void updateState(VariableVector variableVector, StateVector stateVector) {
         double[] state = stateVector.get();
         Arrays.fill(busVector.p, 0);
         Arrays.fill(busVector.q, 0);
         var w = new DoubleWrapper();
         for (int branchNum = 0; branchNum < branchVector.getSize(); branchNum++) {
             if (branchVector.status[branchNum] == 1) {
-                double ph1 = state[quantityVector.ph1Row[branchNum]];
-                double ph2 = state[quantityVector.ph2Row[branchNum]];
-                double a1 = quantityVector.a1Row[branchNum] != -1 ? state[quantityVector.a1Row[branchNum]]
+                double ph1 = state[variableVector.ph1Row[branchNum]];
+                double ph2 = state[variableVector.ph2Row[branchNum]];
+                double a1 = variableVector.a1Row[branchNum] != -1 ? state[variableVector.a1Row[branchNum]]
                                                                   : branchVector.a1[branchNum];
 
                 double theta1 = AbstractClosedBranchAcFlowEquationTerm.theta1(
@@ -58,9 +58,9 @@ public class NetworkVector {
                 double cosTheta2 = w.value;
 
                 if (branchVector.bus1Num[branchNum] != -1 && branchVector.bus2Num[branchNum] != -1) {
-                    double v1 = state[quantityVector.v1Row[branchNum]];
-                    double v2 = state[quantityVector.v2Row[branchNum]];
-                    double r1 = quantityVector.r1Row[branchNum] != -1 ? state[quantityVector.r1Row[branchNum]]
+                    double v1 = state[variableVector.v1Row[branchNum]];
+                    double v2 = state[variableVector.v2Row[branchNum]];
+                    double r1 = variableVector.r1Row[branchNum] != -1 ? state[variableVector.r1Row[branchNum]]
                                                                       : branchVector.r1[branchNum];
 
                     branchVector.p1[branchNum] = ClosedBranchSide1ActiveFlowEquationTerm.p1(
@@ -111,8 +111,8 @@ public class NetworkVector {
                     branchVector.q2[branchNum] = 0;
                     branchVector.i2[branchNum] = 0;
 
-                    double v1 = state[quantityVector.v1Row[branchNum]];
-                    double r1 = quantityVector.r1Row[branchNum] != -1 ? state[quantityVector.r1Row[branchNum]]
+                    double v1 = state[variableVector.v1Row[branchNum]];
+                    double r1 = variableVector.r1Row[branchNum] != -1 ? state[variableVector.r1Row[branchNum]]
                                                                       : branchVector.r1[branchNum];
 
                     branchVector.p1[branchNum] = OpenBranchSide2ActiveFlowEquationTerm.p1(
@@ -143,7 +143,7 @@ public class NetworkVector {
                     branchVector.q1[branchNum] = 0;
                     branchVector.i1[branchNum] = 0;
 
-                    double v2 = state[quantityVector.v2Row[branchNum]];
+                    double v2 = state[variableVector.v2Row[branchNum]];
 
                     branchVector.p2[branchNum] = OpenBranchSide1ActiveFlowEquationTerm.p2(
                             branchVector.y[branchNum],

@@ -9,10 +9,27 @@ public abstract class AbstractBusEquationArray implements EquationArray<AcVariab
 
     protected final BusVector busVector;
 
-    protected final QuantityVector quantityVector;
+    protected final VariableVector variableVector;
 
-    protected AbstractBusEquationArray(BusVector busVector, QuantityVector quantityVector) {
+    protected int firstColumn = -1;
+
+    protected AbstractBusEquationArray(BusVector busVector, VariableVector variableVector) {
         this.busVector = Objects.requireNonNull(busVector);
-        this.quantityVector = Objects.requireNonNull(quantityVector);
+        this.variableVector = Objects.requireNonNull(variableVector);
+    }
+
+    @Override
+    public int getFirstColumn() {
+        return firstColumn;
+    }
+
+    @Override
+    public void setFirstColumn(int firstColumn) {
+        this.firstColumn = firstColumn;
+    }
+
+    @Override
+    public int getLength() {
+        return busVector.getSize();
     }
 }

@@ -6,5 +6,11 @@ public interface EquationArray<V extends Enum<V> & Quantity, E extends Enum<E> &
 
     E getType();
 
+    int getFirstColumn();
+
+    void setFirstColumn(int firstColumn);
+
+    int getLength();
+
     void eval(double[] values);
 }

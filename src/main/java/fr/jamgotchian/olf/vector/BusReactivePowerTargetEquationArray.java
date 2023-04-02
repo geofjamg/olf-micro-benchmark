@@ -4,8 +4,8 @@ import com.powsybl.openloadflow.ac.equations.AcEquationType;
 
 public class BusReactivePowerTargetEquationArray extends AbstractBusEquationArray {
 
-    public BusReactivePowerTargetEquationArray(BusVector busVector, QuantityVector quantityVector) {
-        super(busVector, quantityVector);
+    public BusReactivePowerTargetEquationArray(BusVector busVector, VariableVector variableVector) {
+        super(busVector, variableVector);
     }
 
     @Override
@@ -16,7 +16,7 @@ public class BusReactivePowerTargetEquationArray extends AbstractBusEquationArra
     @Override
     public void eval(double[] values) {
         for (int busNum = 0; busNum < busVector.getSize(); busNum++) {
-            values[quantityVector.qColumn[busNum]] = busVector.q[busNum];
+            values[firstColumn + busNum] = busVector.q[busNum];
         }
     }
 }

@@ -30,8 +30,10 @@ public class RealNetworkBenchmark {
     public void arrayModel(Rte6515NetworkState state, Blackhole bh) {
         state.getNetworkVector().updateState(state.getQuantityVector(), state.getEquationSystem().getStateVector());
         BusActivePowerTargetEquationArray p = new BusActivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getQuantityVector());
+        p.setFirstColumn(0);
         BusReactivePowerTargetEquationArray q = new BusReactivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getQuantityVector());
-        double[] values = new double[state.getEquationSystem().getIndex().getSortedEquationsToSolve().size()];
+        q.setFirstColumn(state.getNetworkVector().getBusVector().getSize());
+        double[] values = new double[state.getNetworkVector().getBusVector().getSize() * 2];
         p.eval(values);
         q.eval(values);
         bh.consume(values);
