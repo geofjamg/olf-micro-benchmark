@@ -36,7 +36,7 @@ public class NetworkVector {
         Arrays.fill(busVector.q, 0);
         var w = new DoubleWrapper();
         for (int branchNum = 0; branchNum < branchVector.getSize(); branchNum++) {
-            if (branchVector.active[branchNum] == 1) {
+            if (branchVector.status[branchNum] == 1) {
                 double ph1 = state[quantityVector.ph1Row[branchNum]];
                 double ph2 = state[quantityVector.ph2Row[branchNum]];
                 double a1 = quantityVector.a1Row[branchNum] != -1 ? state[quantityVector.a1Row[branchNum]]
@@ -176,8 +176,8 @@ public class NetworkVector {
         }
 
         for (int busNum = 0; busNum < busVector.getSize(); busNum++) {
-            busVector.p[busNum] *= busVector.active[busNum];
-            busVector.q[busNum] *= busVector.active[busNum];
+            busVector.p[busNum] *= busVector.status[busNum];
+            busVector.q[busNum] *= busVector.status[busNum];
         }
     }
 }

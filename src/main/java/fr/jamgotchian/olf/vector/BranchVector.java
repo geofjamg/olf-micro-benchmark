@@ -24,7 +24,7 @@ public class BranchVector {
     final double[] r1;
     final double[] a1;
 
-    final int[] active;
+    final int[] status;
 
     final double[] p1;
     final double[] p2;
@@ -47,7 +47,7 @@ public class BranchVector {
         b2 = new double[size];
         r1 = new double[size];
         a1 = new double[size];
-        active = new int[size];
+        status = new int[size];
         p1 = new double[size];
         p2 = new double[size];
         q1 = new double[size];
@@ -74,12 +74,12 @@ public class BranchVector {
             g2[i] = piModel.getG2();
             r1[i] = piModel.getR1();
             a1[i] = piModel.getA1();
-            active[i] = branch.isDisabled() ? 0 : 1;
+            status[i] = branch.isDisabled() ? 0 : 1;
         }
     }
 
     public int getSize() {
-        return active.length;
+        return status.length;
     }
 
     public Evaluable getP1(int num) {
