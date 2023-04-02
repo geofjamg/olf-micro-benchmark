@@ -69,6 +69,9 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
                 case BRANCH_RHO1:
                     r1Row[v.getElementNum()] = v.getRow();
                     break;
+
+                default:
+                    break;
             }
         }
         var branchVector = networkVector.getBranchVector();
@@ -88,6 +91,9 @@ public class QuantityVector implements EquationSystemIndexListener<AcVariableTyp
                     break;
                 case BUS_TARGET_Q:
                     qColumn[equation.getElementNum()] = equation.getColumn();
+                    break;
+
+                default:
                     break;
             }
         }
