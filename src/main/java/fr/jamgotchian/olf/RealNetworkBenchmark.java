@@ -43,9 +43,9 @@ public class RealNetworkBenchmark {
     @Benchmark
     public void arrayModel(Rte6515NetworkState state, Blackhole bh) {
         state.getNetworkVector().updateState(state.getVariableVector(), state.getEquationSystem().getStateVector());
-        BusActivePowerTargetEquationArray p = new BusActivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getVariableVector());
+        BusActivePowerTargetEquationArray p = new BusActivePowerTargetEquationArray(state.getNetworkVector().getBusVector());
         p.setFirstColumn(0);
-        BusReactivePowerTargetEquationArray q = new BusReactivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getVariableVector());
+        BusReactivePowerTargetEquationArray q = new BusReactivePowerTargetEquationArray(state.getNetworkVector().getBusVector());
         q.setFirstColumn(p.getLength());
         double[] values = new double[state.getNetworkVector().getBusVector().getSize() * 2];
         p.eval(values);
@@ -56,9 +56,9 @@ public class RealNetworkBenchmark {
 //    @Benchmark
     public void arrayModelDer(Rte6515NetworkState state, Blackhole bh) {
         state.getNetworkVector().updateState(state.getVariableVector(), state.getEquationSystem().getStateVector());
-        BusActivePowerTargetEquationArray p = new BusActivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getVariableVector());
+        BusActivePowerTargetEquationArray p = new BusActivePowerTargetEquationArray(state.getNetworkVector().getBusVector());
         p.setFirstColumn(0);
-        BusReactivePowerTargetEquationArray q = new BusReactivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getVariableVector());
+        BusReactivePowerTargetEquationArray q = new BusReactivePowerTargetEquationArray(state.getNetworkVector().getBusVector());
         q.setFirstColumn(p.getLength());
         double[] values = new double[state.getNetworkVector().getBusVector().getSize() * 7];
         int[] index = new int[1];

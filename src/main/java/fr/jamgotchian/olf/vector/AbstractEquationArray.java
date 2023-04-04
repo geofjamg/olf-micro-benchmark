@@ -9,17 +9,14 @@ public abstract class AbstractEquationArray<EV extends ElementVector, V extends 
 
     protected final EV elementVector;
 
-    protected final VariableVector variableVector;
-
     protected int firstColumn = -1;
 
     protected boolean[] active;
 
     protected int length = 0;
 
-    protected AbstractEquationArray(EV elementVector, VariableVector variableVector) {
+    protected AbstractEquationArray(EV elementVector) {
         this.elementVector = Objects.requireNonNull(elementVector);
-        this.variableVector = Objects.requireNonNull(variableVector);
         active = new boolean[elementVector.getSize()];
         for (int elementNum = 0; elementNum < elementVector.getSize(); elementNum++) {
             active[elementNum] = elementVector.isActive(elementNum);

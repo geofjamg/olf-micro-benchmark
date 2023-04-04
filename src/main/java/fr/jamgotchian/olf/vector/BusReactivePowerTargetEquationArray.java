@@ -5,8 +5,8 @@ import com.powsybl.openloadflow.ac.equations.AcVariableType;
 
 public class BusReactivePowerTargetEquationArray extends AbstractEquationArray<BusVector, AcVariableType, AcEquationType> {
 
-    public BusReactivePowerTargetEquationArray(BusVector busVector, VariableVector variableVector) {
-        super(busVector, variableVector);
+    public BusReactivePowerTargetEquationArray(BusVector busVector) {
+        super(busVector);
     }
 
     @Override

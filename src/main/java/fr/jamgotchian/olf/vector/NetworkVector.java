@@ -63,6 +63,8 @@ public class NetworkVector {
                     double r1 = variableVector.r1Row[branchNum] != -1 ? state[variableVector.r1Row[branchNum]]
                                                                       : branchVector.r1[branchNum];
 
+                    // p1
+
                     branchVector.p1[branchNum] = ClosedBranchSide1ActiveFlowEquationTerm.p1(
                             branchVector.y[branchNum],
                             branchVector.sinKsi[branchNum],
@@ -72,6 +74,34 @@ public class NetworkVector {
                             v2,
                             sinTheta1);
                     busVector.p[branchVector.bus1Num[branchNum]] += branchVector.p1[branchNum];
+
+                    branchVector.dp1dv1[branchNum] = ClosedBranchSide1ActiveFlowEquationTerm.dp1dv1(
+                            branchVector.y[branchNum],
+                            branchVector.sinKsi[branchNum],
+                            branchVector.g1[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            sinTheta1);
+                    branchVector.dp1dv2[branchNum] = ClosedBranchSide1ActiveFlowEquationTerm.dp1dv2(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            sinTheta1);
+                    branchVector.dp1dph1[branchNum] = ClosedBranchSide1ActiveFlowEquationTerm.dp1dph1(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            cosTheta1);
+                    branchVector.dp1dph2[branchNum] = ClosedBranchSide1ActiveFlowEquationTerm.dp1dph2(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            cosTheta1);
+
+                    // q1
 
                     branchVector.q1[branchNum] = ClosedBranchSide1ReactiveFlowEquationTerm.q1(
                             branchVector.y[branchNum],
@@ -83,7 +113,37 @@ public class NetworkVector {
                             cosTheta1);
                     busVector.q[branchVector.bus1Num[branchNum]] += branchVector.q1[branchNum];
 
+                    branchVector.dq1dv1[branchNum] = ClosedBranchSide1ReactiveFlowEquationTerm.dq1dv1(
+                            branchVector.y[branchNum],
+                            branchVector.cosKsi[branchNum],
+                            branchVector.b1[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            cosTheta1);
+                    branchVector.dq1dv2[branchNum] = ClosedBranchSide1ReactiveFlowEquationTerm.dq1dv2(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            cosTheta1);
+                    branchVector.dq1dph1[branchNum] = ClosedBranchSide1ReactiveFlowEquationTerm.dq1dph1(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            sinTheta1);
+                    branchVector.dq1dph2[branchNum] = ClosedBranchSide1ReactiveFlowEquationTerm.dq1dph2(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            sinTheta1);
+
+                    // i1
+
                     branchVector.i1[branchNum] = FastMath.hypot(branchVector.p1[branchNum], branchVector.q1[branchNum]) / (v1 * SQRT3 / 1000);
+
+                    // p2
 
                     branchVector.p2[branchNum] = ClosedBranchSide2ActiveFlowEquationTerm.p2(
                             branchVector.y[branchNum],
@@ -95,6 +155,34 @@ public class NetworkVector {
                             sinTheta2);
                     busVector.p[branchVector.bus2Num[branchNum]] += branchVector.p2[branchNum];
 
+                    branchVector.dp2dv1[branchNum] = ClosedBranchSide2ActiveFlowEquationTerm.dp2dv1(
+                            branchVector.y[branchNum],
+                            r1,
+                            v2,
+                            sinTheta2);
+                    branchVector.dp2dv2[branchNum] = ClosedBranchSide2ActiveFlowEquationTerm.dp2dv2(
+                            branchVector.y[branchNum],
+                            branchVector.sinKsi[branchNum],
+                            branchVector.g2[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            sinTheta2);
+                    branchVector.dp2dph1[branchNum] = ClosedBranchSide2ActiveFlowEquationTerm.dp2dph1(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            cosTheta2);
+                    branchVector.dp2dph2[branchNum] = ClosedBranchSide2ActiveFlowEquationTerm.dp2dph2(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            cosTheta2);
+
+                    // q2
+
                     branchVector.q2[branchNum] = ClosedBranchSide2ReactiveFlowEquationTerm.q2(
                             branchVector.y[branchNum],
                             branchVector.cosKsi[branchNum],
@@ -104,6 +192,34 @@ public class NetworkVector {
                             v2,
                             cosTheta2);
                     busVector.q[branchVector.bus2Num[branchNum]] += branchVector.q2[branchNum];
+
+                    branchVector.dq2dv1[branchNum] = ClosedBranchSide2ReactiveFlowEquationTerm.dq2dv1(
+                            branchVector.y[branchNum],
+                            r1,
+                            v2,
+                            cosTheta2);
+                    branchVector.dq2dv2[branchNum] = ClosedBranchSide2ReactiveFlowEquationTerm.dq2dv2(
+                            branchVector.y[branchNum],
+                            branchVector.cosKsi[branchNum],
+                            branchVector.b2[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            cosTheta2);
+                    branchVector.dq2dph1[branchNum] = ClosedBranchSide2ReactiveFlowEquationTerm.dq2dph1(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            sinTheta2);
+                    branchVector.dq2dph2[branchNum] = ClosedBranchSide2ReactiveFlowEquationTerm.dq2dph2(
+                            branchVector.y[branchNum],
+                            v1,
+                            r1,
+                            v2,
+                            sinTheta2);
+
+                    // i2
 
                     branchVector.i2[branchNum] = FastMath.hypot(branchVector.p2[branchNum], branchVector.q2[branchNum]) / (v2 * SQRT3 / 1000);
                 } else if (branchVector.bus1Num[branchNum] != -1) {

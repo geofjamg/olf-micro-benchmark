@@ -33,6 +33,34 @@ public class BranchVector implements ElementVector {
     final double[] i1;
     final double[] i2;
 
+    final double[] dp1dv1;
+    final double[] dp1dv2;
+    final double[] dp1dph1;
+    final double[] dp1dph2;
+    final double[] dp1da1;
+    final double[] dp1dr1;
+
+    final double[] dq1dv1;
+    final double[] dq1dv2;
+    final double[] dq1dph1;
+    final double[] dq1dph2;
+    final double[] dq1da1;
+    final double[] dq1dr1;
+
+    final double[] dp2dv1;
+    final double[] dp2dv2;
+    final double[] dp2dph1;
+    final double[] dp2dph2;
+    final double[] dp2da1;
+    final double[] dp2dr1;
+
+    final double[] dq2dv1;
+    final double[] dq2dv2;
+    final double[] dq2dph1;
+    final double[] dq2dph2;
+    final double[] dq2da1;
+    final double[] dq2dr1;
+
     public BranchVector(List<LfBranch> branches) {
         int size = branches.size();
         bus1Num = new int[size];
@@ -48,12 +76,42 @@ public class BranchVector implements ElementVector {
         r1 = new double[size];
         a1 = new double[size];
         status = new int[size];
+
         p1 = new double[size];
         p2 = new double[size];
         q1 = new double[size];
         q2 = new double[size];
         i1 = new double[size];
         i2 = new double[size];
+
+        dp1dv1 = new double[size];
+        dp1dv2 = new double[size];
+        dp1dph1 = new double[size];
+        dp1dph2 = new double[size];
+        dp1da1 = new double[size];
+        dp1dr1 = new double[size];
+
+        dq1dv1 = new double[size];
+        dq1dv2 = new double[size];
+        dq1dph1 = new double[size];
+        dq1dph2 = new double[size];
+        dq1da1 = new double[size];
+        dq1dr1 = new double[size];
+
+        dp2dv1 = new double[size];
+        dp2dv2 = new double[size];
+        dp2dph1 = new double[size];
+        dp2dph2 = new double[size];
+        dp2da1 = new double[size];
+        dp2dr1 = new double[size];
+
+        dq2dv1 = new double[size];
+        dq2dv2 = new double[size];
+        dq2dph1 = new double[size];
+        dq2dph2 = new double[size];
+        dq2da1 = new double[size];
+        dq2dr1 = new double[size];
+
         for (int i = 0; i < branches.size(); i++) {
             LfBranch branch = branches.get(i);
             LfBus bus1 = branch.getBus1();
