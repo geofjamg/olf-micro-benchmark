@@ -19,7 +19,6 @@ public interface EquationArray<V extends Enum<V> & Quantity, E extends Enum<E> &
 
     void eval(double[] values);
 
-
     interface DerHandler<V extends Enum<V> & Quantity> {
 
         int onDer(int column, Variable<V> variable, double value, int matrixElementIndex);
