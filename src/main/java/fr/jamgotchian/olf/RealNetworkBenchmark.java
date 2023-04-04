@@ -26,16 +26,50 @@ public class RealNetworkBenchmark {
         bh.consume(values);
     }
 
+//    @Benchmark
+    public void objectModelDer(Rte6515NetworkState state, Blackhole bh) {
+        List<Equation<AcVariableType, AcEquationType>> equations = state.getEquations();
+        double[] values = new double[equations.size() * 7];
+        int[] index = new int[1];
+        for (int i = 0; i < equations.size(); i++) {
+            equations.get(i).der((variable, value, matrixElementIndex) -> {
+                values[index[0]++] = value;
+                return index[0];
+            });
+        }
+        bh.consume(values);
+    }
+
     @Benchmark
     public void arrayModel(Rte6515NetworkState state, Blackhole bh) {
-        state.getNetworkVector().updateState(state.getQuantityVector(), state.getEquationSystem().getStateVector());
-        BusActivePowerTargetEquationArray p = new BusActivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getQuantityVector());
+        state.getNetworkVector().updateState(state.getVariableVector(), state.getEquationSystem().getStateVector());
+        BusActivePowerTargetEquationArray p = new BusActivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getVariableVector());
         p.setFirstColumn(0);
-        BusReactivePowerTargetEquationArray q = new BusReactivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getQuantityVector());
-        q.setFirstColumn(state.getNetworkVector().getBusVector().getSize());
+        BusReactivePowerTargetEquationArray q = new BusReactivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getVariableVector());
+        q.setFirstColumn(p.getLength());
         double[] values = new double[state.getNetworkVector().getBusVector().getSize() * 2];
         p.eval(values);
         q.eval(values);
+        bh.consume(values);
+    }
+
+//    @Benchmark
+    public void arrayModelDer(Rte6515NetworkState state, Blackhole bh) {
+        state.getNetworkVector().updateState(state.getVariableVector(), state.getEquationSystem().getStateVector());
+        BusActivePowerTargetEquationArray p = new BusActivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getVariableVector());
+        p.setFirstColumn(0);
+        BusReactivePowerTargetEquationArray q = new BusReactivePowerTargetEquationArray(state.getNetworkVector().getBusVector(), state.getVariableVector());
+        q.setFirstColumn(p.getLength());
+        double[] values = new double[state.getNetworkVector().getBusVector().getSize() * 7];
+        int[] index = new int[1];
+        p.der((column, variable, value, matrixElementIndex) -> {
+            values[index[0]++] = value;
+            return index[0];
+        });
+        q.der((column, variable, value, matrixElementIndex) -> {
+            values[index[0]++] = value;
+            return index[0];
+        });
         bh.consume(values);
     }
 }

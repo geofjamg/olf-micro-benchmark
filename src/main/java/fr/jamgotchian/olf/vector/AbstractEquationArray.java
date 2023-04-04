@@ -73,4 +73,9 @@ public abstract class AbstractEquationArray<EV extends ElementVector, V extends 
             }
         }
     }
+
+    @Override
+    public void der(DerHandler<V> handler) {
+        // TODO
+    }
 }

@@ -103,7 +103,7 @@ public abstract class AbstractNetworkState {
         return networkVector;
     }
 
-    public VariableVector getQuantityVector() {
+    public VariableVector getVariableVector() {
         return variableVector;
     }
 }
