@@ -1,11 +1,17 @@
 package fr.jamgotchian.olf.vector;
 
+import com.powsybl.openloadflow.equations.EquationSystem;
 import com.powsybl.openloadflow.equations.Quantity;
+import com.powsybl.openloadflow.equations.Variable;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
 public abstract class AbstractEquationArray<EV extends ElementVector, V extends Enum<V> & Quantity, E extends Enum<E> & Quantity>
         implements EquationArray<V, E> {
+
+    protected final EquationSystem<V, E> equationSystem;
 
     protected final EV elementVector;
 
@@ -15,7 +21,8 @@ public abstract class AbstractEquationArray<EV extends ElementVector, V extends 
 
     protected int length = 0;
 
-    protected AbstractEquationArray(EV elementVector) {
+    protected AbstractEquationArray(EquationSystem<V, E> equationSystem, EV elementVector) {
+        this.equationSystem = Objects.requireNonNull(equationSystem);
         this.elementVector = Objects.requireNonNull(elementVector);
         active = new boolean[elementVector.getSize()];
         for (int elementNum = 0; elementNum < elementVector.getSize(); elementNum++) {
@@ -24,6 +31,16 @@ public abstract class AbstractEquationArray<EV extends ElementVector, V extends 
                 length++;
             }
         }
+    }
+
+    @Override
+    public EquationSystem<V, E> getEquationSystem() {
+        return equationSystem;
+    }
+
+    @Override
+    public Set<Variable<V>> getVariables() {
+        return Collections.emptySet(); // FIXME
     }
 
     @Override
@@ -55,6 +72,7 @@ public abstract class AbstractEquationArray<EV extends ElementVector, V extends 
             } else {
                 length--;
             }
+            // TODO notify equation system listeners
         }
     }
 
