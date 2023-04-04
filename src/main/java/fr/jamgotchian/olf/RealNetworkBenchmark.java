@@ -31,8 +31,8 @@ public class RealNetworkBenchmark {
         List<Equation<AcVariableType, AcEquationType>> equations = state.getEquations();
         double[] values = new double[equations.size() * 7];
         int[] index = new int[1];
-        for (int i = 0; i < equations.size(); i++) {
-            equations.get(i).der((variable, value, matrixElementIndex) -> {
+        for (Equation<AcVariableType, AcEquationType> equation : equations) {
+            equation.der((variable, value, matrixElementIndex) -> {
                 values[index[0]++] = value;
                 return index[0];
             });
